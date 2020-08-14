@@ -1,0 +1,20 @@
+Package: modefill
+Title: R-package to fill missing DDD-values from drug purchase history
+Version: 0.1
+Authors@R: 
+    person(given = "Juuso",
+           family = "Korhonen",
+           role = c("aut", "cre"),
+           email = "juuso.o.korhonen@aalto.fi")
+Description: Fills the missing DDD values by finding comparative purchases (same vnr) from the data and calculating their DDD / cost. New DDD is then just this times the purchase cost. Comparative purchases are found following logic: 1. search current interval where prices should have stayed the same (intervals are 1.-14. and 15.-30. of the month), and calculate the mode. DDD / cost. If no comparative purchases found, see for the latest active mode from previous intervals. How long a mode stays active depends on parameter actv_time (given in days). If multiple values with themax frequency, calculate the median of these max frequency values.
+License: -
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Imports: 
+  haven,
+  data.table,
+  tidyr,
+  dplyr,
+  DescTools
