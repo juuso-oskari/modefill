@@ -18,7 +18,7 @@
 #' @return data frame with filled DDD values
 #' @export
 fillddd <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr", kustvar = "kust", dddvar = "ddd", dispatch_rm = TRUE, extra_rm = TRUE, print_info = FALSE, info_price = TRUE){
-  dt <- setDT(pruch_data)
+  dt <- setDT(purch_data)
   dt[, ddd:=as.numeric(get(dddvar))]
   dt[, vnr:=as.numeric(get(vnrovar))]
   dt[, kust:=as.numeric(get(kustvar))]
