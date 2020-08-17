@@ -19,6 +19,8 @@ fillddd(
 )
 }
 \arguments{
+\item{purch_data}{data frame of the drug purchase data}
+
 \item{actv_time}{how long a value stays active to be able to predict from}
 
 \item{pvmvar}{purchase date variable name in the data frame}
@@ -36,8 +38,6 @@ fillddd(
 \item{print_info}{prints info of all the predictions made}
 
 \item{info_price}{show package cost in info instead of DDD / cost}
-
-\item{dt}{data frame of the drug purchase data}
 }
 \value{
 data frame with filled DDD values

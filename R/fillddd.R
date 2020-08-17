@@ -5,6 +5,10 @@
 #' DDD / cost. If no comparative purchases found, see for the latest active mode from previous intervals. How long a mode stays active depends on parameter actv_time (given in days). If
 #' multiple values with themax frequency, calculate the median of these max frequency values.
 #' @import data.table
+#' @importFrom DescTools Mode
+#' @importFrom stats median
+#' @importFrom tidyr fill
+#' @importFrom dplyr group_by mutate ungroup
 #' @param purch_data data frame of the drug purchase data
 #' @param actv_time how long a value stays active to be able to predict from
 #' @param pvmvar purchase date variable name in the data frame
@@ -47,16 +51,16 @@ fillddd <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr
   }
   dt <- dt %>%
     dplyr::group_by(vnr, year, month, day_group) %>%
-    dplyr::mutate(mode = getmode(dddperkust), dddperkust = ifelse(is.na(dddperkust), mode, dddperkust)) %>%
+    mutate(mode = getmode(dddperkust), dddperkust = ifelse(is.na(dddperkust), mode, dddperkust)) %>%
     dplyr::ungroup()
   # then fill with latest active mode (parameter actv_time dictates how long a mode stays active)
   dt <- dt %>%
     dplyr::group_by(vnr) %>%
-    dplyr::mutate(priordate = ifelse(is.na(dddperkust), NA, otpvm)) %>%
-    tidyr::fill(priordate, .direction = "down") %>%
-    dplyr::mutate(diff1 = as.numeric(difftime(otpvm, as.Date(priordate, origin="1970-01-01"), units = "days"))) %>%
-    tidyr::fill(mode, .direction = "down") %>%
-    dplyr::mutate(dddperkust = ifelse(is.na(dddperkust) & diff1 < actv_time & !is.na(diff1), mode, dddperkust)) %>%
+    mutate(priordate = ifelse(is.na(dddperkust), NA, otpvm)) %>%
+    fill(priordate, .direction = "down") %>%
+    mutate(diff1 = as.numeric(difftime(otpvm, as.Date(priordate, origin="1970-01-01"), units = "days"))) %>%
+    fill(mode, .direction = "down") %>%
+    mutate(dddperkust = ifelse(is.na(dddperkust) & diff1 < actv_time & !is.na(diff1), mode, dddperkust)) %>%
     dplyr::ungroup()
 
   dt <- setDT(dt)
@@ -74,12 +78,12 @@ fillddd <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr
     temp[, aika_loppu := aika_alku][, hinta_yla := hinta_ala]
     temp <- temp %>%
       dplyr::group_by(vnr) %>%
-      tidyr::fill(aika_alku, hinta_ala, .direction = "down") %>%
+      fill(aika_alku, hinta_ala, .direction = "down") %>%
       dplyr::ungroup()
 
     temp <- temp %>%
       dplyr::group_by(vnr) %>%
-      tidyr::fill(aika_loppu, hinta_yla, .direction = "up") %>%
+      fill(aika_loppu, hinta_yla, .direction = "up") %>%
       dplyr::ungroup()
 
     temp <- setDT(temp)
