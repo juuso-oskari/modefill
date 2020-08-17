@@ -10,18 +10,19 @@
 #' @importFrom tidyr fill
 #' @importFrom dplyr group_by mutate ungroup
 #' @param purch_data data frame of the drug purchase data
-#' @param actv_time how long a value stays active to be able to predict from
-#' @param pvmvar purchase date variable name in the data frame
-#' @param vnrovar drug code variable name in the data frame
-#' @param kustvar cost variable name in the data frame
-#' @param dddvar ddd variable name in the data frame
-#' @param dispatch_rm remove dispatch cost
-#' @param extra_rm remove all the added variables from the returned data
-#' @param print_info prints info of all the predictions made
-#' @param info_price show package cost in info instead of DDD / cost
+#' @param actv_time how long a value stays active to be able to predict from, 60 by default
+#' @param pvmvar purchase date variable name in the data frame, "otpvm" by default
+#' @param vnrovar drug code variable name in the data frame, "vnr" by default
+#' @param kustvar cost variable name in the data frame, "kust" by default
+#' @param dddvar ddd variable name in the data frame, "ddd" by default
+#' @param dispatch_rm remove dispatch cost, TRUE by default
+#' @param extra_rm remove all the added variables from the returned data, TRUE by default
+#' @param rstr_ord restore original order of the data at the end of function, FALSE by default
+#' @param print_info prints info of all the predictions made, FALSE by default
+#' @param info_price show package cost in info instead of DDD / cost, FALSE by default
 #' @return data frame with filled DDD values
 #' @export
-fillddd <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr", kustvar = "kust", dddvar = "ddd", dispatch_rm = TRUE, extra_rm = TRUE, rstr_ord = FALSE, print_info = FALSE, info_price = TRUE){
+modefill <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr", kustvar = "kust", dddvar = "ddd", dispatch_rm = TRUE, extra_rm = TRUE, rstr_ord = FALSE, print_info = FALSE, info_price = TRUE){
   dt <- setDT(purch_data)
   dt[, ddd:=as.numeric(get(dddvar))]
   dt[, vnr:=as.numeric(get(vnrovar))]
@@ -91,7 +92,7 @@ fillddd <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr
   }
   # remove added variables
   if(extra_rm){
-    dt[,c("day", "month", "day_group", "year", "predicted", "mode"):=NULL]
+    dt[,c("day", "month", "day_group", "year", "predicted", "mode", "dddperkust", "diff1", "priordate"):=NULL]
   }
   # restore to original order
   if(rstr_ord){
