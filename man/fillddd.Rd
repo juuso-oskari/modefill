@@ -13,6 +13,7 @@ fillddd(
   dddvar = "ddd",
   dispatch_rm = TRUE,
   extra_rm = TRUE,
+  rstr_ord = FALSE,
   print_info = FALSE,
   info_price = TRUE
 )
