@@ -3,7 +3,7 @@
 #' Fills the missing DDD values by finding comparative purchases (same vnr) from the data and calculating their DDD / cost. New DDD is then just this times the purchase cost.
 #' Comparative purchases are found following logic: 1. search current interval where prices should have stayed the same (intervals are 1.-14. and 15.-30. of the month), and calculate the mode
 #' DDD / cost. If no comparative purchases found, see for the latest active mode from previous intervals. How long a mode stays active depends on parameter actv_time (given in days). If
-#' multiple values with themax frequency, calculate the median of these max frequency values.
+#' multiple values with the max frequency, calculate the median of these max frequency values.
 #' @import data.table
 #' @importFrom DescTools Mode
 #' @importFrom stats median
@@ -21,6 +21,8 @@
 #' @param print_info prints info of all the predictions made, FALSE by default
 #' @param info_price show package cost in info instead of DDD / cost, FALSE by default
 #' @return data frame with filled DDD values
+#' @example
+#' modefill(drug_purchase_dataframe, actv_time = 90) # extending the search time for the active mode price to 90 days
 #' @export
 modefill <- function(purch_data, actv_time = 60, pvmvar = "otpvm", vnrovar = "vnr", kustvar = "kust", dddvar = "ddd", dispatch_rm = TRUE, extra_rm = TRUE, rstr_ord = FALSE, print_info = FALSE, info_price = TRUE){
   dt <- setDT(purch_data)
